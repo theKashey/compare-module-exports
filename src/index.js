@@ -4,8 +4,10 @@ function generate(libraryName) {
 
   function testFunction(a, b, file, name) {
     if (a.length !== b.length) {
-      console.error(name + ': in' + file + '\n\t\t' + a.toString() + '\n\tdoes not match\n\t\t' + b.toString());
-      throw new Error(libraryName + ': function argument mismatch: ' + file + ': ' + name);
+      if (a.toString().indexOf('_could_be_any_') < 0) {
+        console.error(name + ': in' + file + '\n\t\t' + a.toString() + '\n\tdoes not match\n\t\t' + b.toString());
+        throw new Error(libraryName + ': function argument mismatch: ' + file + ': ' + name);
+      }
     }
   }
 
