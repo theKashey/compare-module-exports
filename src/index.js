@@ -16,7 +16,7 @@ function generate(libraryName) {
     const typeOfA = typeof a;
     const typeOfB = typeof b;
     if (typeOfA !== typeOfB) {
-      throw new Error(libraryName + ': exported type mismatch: ' + file + ':' + name + '. Expected ' + typeOfB + ', got ' + typeOfB + '');
+      throw new Error(libraryName + ': exported type mismatch: ' + file + ':' + name + '. Expected ' + typeOfA + ', got ' + typeOfB + '');
     }
     if (typeOfA === 'function') {
       return testFunction(a, b, file, name);
@@ -25,11 +25,22 @@ function generate(libraryName) {
 
   function matchExports(realExports, mockedExports, realFile, mockFile) {
     hasError = false;
-    if (typeof mockedExports !== typeof realExports) {
-      throw new Error(libraryName + ': mock ' + mockFile + ' export does not match real file');
+    const typeOfA = typeof mockedExports;
+    const typeOfB = typeof realExports
+    if (typeOfA !== typeOfB) {
+      console.error(
+        libraryName + ': mock ' + mockFile + ' exports does not match a real file.' +
+        ' Expected ' + typeOfA + ', got ' + typeOfB + ''
+      );
+      return true;
     }
     if (typeof mockedExports === 'function') {
-      test(mockedExports, realExports, realFile, 'exports');
+      try {
+        test(mockedExports, realExports, realFile, 'exports');
+      } catch (e) {
+        console.error(e.message, '\n');
+        hasError = true;
+      }
     } else if (typeof mockedExports === 'object') {
       Object.keys(mockedExports).forEach(key => {
         try {
