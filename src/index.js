@@ -18,7 +18,7 @@ function generate(libraryName) {
     const typeOfA = typeof a;
     const typeOfB = typeof b;
     if (typeOfA !== typeOfB) {
-      throw new Error(libraryName + ': exported type mismatch: ' + file + ':' + name + '. Expected ' + typeOfA + ', got ' + typeOfB + '');
+      throw new Error(libraryName + ': exported type mismatch: ' + file + ':' + name + '. Expected ' + typeOfB + ', got ' + typeOfA + '');
     }
     if (typeOfA === 'function') {
       if (!options.noFunctionCompare) {
@@ -34,7 +34,7 @@ function generate(libraryName) {
     if (typeOfA !== typeOfB) {
       console.error(
         libraryName + ': mock ' + mockFile + ' exports does not match a real file.' +
-        ' Expected ' + typeOfA + ', got ' + typeOfB + ''
+        ' Expected ' + typeOfB + ', got ' + typeOfA + ''
       );
       return true;
     }
