@@ -58,7 +58,14 @@ function generate(libraryName) {
     return hasError;
   }
 
-  return matchExports;
+  function tryMatchExports(realExports, mockedExports, realFile, mockFile, options = {}) {
+    if(matchExports(realExports, mockedExports, realFile, mockFile, options)){
+      return matchExports(realExports, { default: mockedExports }, realFile, mockFile, options)
+    }
+    return false;
+  }
+
+  return tryMatchExports;
 }
 
 module.exports = generate;
