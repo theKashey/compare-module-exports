@@ -62,9 +62,14 @@ function generate(libraryName) {
 
   function tryMatchExports(realExports, mockedExports, realFile, mockFile, options = {}) {
     errors = [];
-    if (matchExports(realExports, mockedExports, realFile, mockFile, options)) {
+    const exports = matchExports(realExports, mockedExports, realFile, mockFile, options);
+    if (exports) {
       errors = [];
-      return matchExports(realExports, {default: mockedExports}, realFile, mockFile, options)
+      if (realExports.default) {
+        const defaultExport = matchExports(realExports, {default: mockedExports}, realFile, mockFile, options)
+        return defaultExport ? defaultExport.concat(exports) : false;
+      }
+      return exports;
     }
     return false;
   }
