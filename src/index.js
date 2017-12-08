@@ -1,11 +1,13 @@
 function generate(libraryName) {
 
   let hasError = false;
+  let errors = [];
+  const pushError = (err) => errors.push(err);
 
   function testFunction(a, b, file, name) {
     if (a.length !== b.length) {
       if (a.toString().indexOf('_could_be_any_') < 0) {
-        console.error(name + ': in' + file + '\n\t\t' + a.toString() + '\n\tdoes not match\n\t\t' + b.toString());
+        pushError(name + ': in' + file + '\n\t\t' + a.toString() + '\n\tdoes not match\n\t\t' + b.toString());
         throw new Error(libraryName + ': function argument mismatch: ' + file + ': ' + name);
       }
     }
@@ -32,7 +34,7 @@ function generate(libraryName) {
     const typeOfA = typeof mockedExports;
     const typeOfB = typeof realExports
     if (typeOfA !== typeOfB) {
-      console.error(
+      pushError(
         libraryName + ': mock ' + mockFile + ' exports does not match a real file.' +
         ' Expected ' + typeOfB + ', got ' + typeOfA + ''
       );
@@ -42,7 +44,7 @@ function generate(libraryName) {
       try {
         test(mockedExports, realExports, realFile, 'exports', options);
       } catch (e) {
-        console.error(e.message, '\n');
+        pushError(e.message);
         hasError = true;
       }
     } else if (typeof mockedExports === 'object') {
@@ -50,17 +52,19 @@ function generate(libraryName) {
         try {
           test(mockedExports[key], realExports[key], realFile, key, options)
         } catch (e) {
-          console.error(e.message, '\n');
+          pushError(e.message);
           hasError = true;
         }
       });
     }
-    return hasError;
+    return hasError ? errors : false;
   }
 
   function tryMatchExports(realExports, mockedExports, realFile, mockFile, options = {}) {
-    if(matchExports(realExports, mockedExports, realFile, mockFile, options)){
-      return matchExports(realExports, { default: mockedExports }, realFile, mockFile, options)
+    errors = [];
+    if (matchExports(realExports, mockedExports, realFile, mockFile, options)) {
+      errors = [];
+      return matchExports(realExports, {default: mockedExports}, realFile, mockFile, options)
     }
     return false;
   }
