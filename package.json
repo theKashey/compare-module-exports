@@ -1,10 +1,12 @@
 {
   "name": "compare-module-exports",
-  "version": "2.0.1",
+  "version": "2.1.0",
   "description": "",
-  "main": "src/index.js",
+  "main": "lib/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "BABEL_ENV=cjs babel src -d lib",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prepublish": "npm run build"
   },
   "repository": {
     "type": "git",
@@ -15,5 +17,10 @@
   "bugs": {
     "url": "https://github.com/theKashey/compare-module-exports/issues"
   },
-  "homepage": "https://github.com/theKashey/compare-module-exports#readme"
+  "homepage": "https://github.com/theKashey/compare-module-exports#readme",
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.3",
+    "babel-preset-env": "^1.7.0"
+  }
 }
